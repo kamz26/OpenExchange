@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19206" systemVersion="20G630" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CurrencyRate" representedClassName="CurrencyRate" syncable="YES" codeGenerationType="class">
+        <attribute name="globalBase" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="rates" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Rate" inverseName="rate" inverseEntity="Rate"/>
+    </entity>
+    <entity name="Rate" representedClassName="Rate" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="rate" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrencyRate" inverseName="rates" inverseEntity="CurrencyRate"/>
+    </entity>
+    <elements>
+        <element name="CurrencyRate" positionX="-36" positionY="9" width="128" height="74"/>
+        <element name="Rate" positionX="0" positionY="63" width="128" height="74"/>
+    </elements>
+</model>
