@@ -7,7 +7,7 @@
 
 import Foundation
 
-class OpenExchangeApiService:ApiServiceProtocol{
+final class OpenExchangeApiService:ApiServiceProtocol{
   
   var APIKEY: String{
     return NetworkConstant.APIKey
@@ -17,7 +17,7 @@ class OpenExchangeApiService:ApiServiceProtocol{
     return NetworkConstant.baseUrl
   }
   
-  final func apiCall<T:Codable>(endPoint:EndPoint,queryParams:[QueryParameter] ,objectType:T.Type, completion:@escaping ((T?,Error?)-> Void)) {
+  func apiCall<T:Codable>(endPoint:EndPoint,queryParams:[QueryParameter] ,objectType:T.Type, completion:@escaping ((T?,Error?)-> Void)) {
     guard let request = getApiRequest(endPoint: endPoint,queryParameters: queryParams) else {return}
     
     URLSession.shared.dataTask(with: request) { data, response, error in
@@ -39,7 +39,7 @@ class OpenExchangeApiService:ApiServiceProtocol{
     }.resume()
   }
   
-  private func getApiRequest(endPoint:EndPoint, queryParameters:[QueryParameter]) -> URLRequest?{
+  func getApiRequest(endPoint:EndPoint, queryParameters:[QueryParameter]) -> URLRequest?{
     let finalUrl = baseUrl + endPoint.rawValue + getQueryParameterValues(query: queryParameters)
     if let url = URL(string: finalUrl){
       return  URLRequest(url: url)

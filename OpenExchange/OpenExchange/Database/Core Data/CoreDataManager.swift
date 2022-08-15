@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import UIKit
 
-class CoreDataManager: DatabaseMangerProtocol,SyncManagerProtocol{
+final class CoreDataManager: DatabaseMangerProtocol,SyncManagerProtocol{
   typealias T = NSManagedObjectContext
   
   typealias V = NSManagedObject
@@ -59,7 +59,6 @@ class CoreDataManager: DatabaseMangerProtocol,SyncManagerProtocol{
   }
   
   func deleteData() {
-    
     guard getData()?.first != nil else {return}
     
     let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CurrencyRate")
