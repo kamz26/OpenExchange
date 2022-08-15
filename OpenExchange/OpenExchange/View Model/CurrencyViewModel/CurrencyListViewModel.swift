@@ -8,11 +8,11 @@
 import Foundation
 import UIKit
 
-final class CurrencyListViewModel:CurrencyListViewModelProtocol, SyncManagerProtocol{
+final class CurrencyListViewModel:CurrencyListViewModelProtocol{
   private(set) var currencyService:LatestCurrencyApiServiceProtocol!
   private(set) var currencyConverter:CurrencyConverterProtocol!
   private(set) var currencyModel:CurrencyRate?
-  private(set) var dbManager: some DatabaseMangerProtocol = CoreDataManager()
+  private(set) var dbManager: some DatabaseMangerProtocol & SyncManagerProtocol = CoreDataManager()
   private(set) var currentAmount:Double!
   private(set) var currentCurrency:String!
   weak var currencyListUpdateDelegate:CurrencyListUpdateProtocol?
@@ -93,7 +93,7 @@ final class CurrencyListViewModel:CurrencyListViewModelProtocol, SyncManagerProt
   
   
   func getCurrenciesData() {
-    if isSyncRequired(){
+    if self.dbManager.isSyncRequired(){
       print("fetched from API")
       fetchlatestCurrencyData()
     }else{
@@ -106,6 +106,7 @@ final class CurrencyListViewModel:CurrencyListViewModelProtocol, SyncManagerProt
     currencyService.getLatestCurrenciesData {[weak self] currencyListModel, error in
       guard let safeSelf = self else {return}
       DispatchQueue.main.async {
+        safeSelf.dbManager.deleteData()
         safeSelf.dbManager.saveData(data: currencyListModel)
         safeSelf.fetchPersistedCurrencyData()
       }
@@ -125,18 +126,5 @@ final class CurrencyListViewModel:CurrencyListViewModelProtocol, SyncManagerProt
       return currencyConverter.convert(amount: enteredAmount, currencyValue: value)
     }
     return -1.0
-  }
-  
-  func isSyncRequired() -> Bool {
-    if let currentData = self.dbManager.getData()?.first as? CurrencyRate {
-      let lastSyncedTimestamp = currentData.timestamp
-      let currentTimeStamp = Date().currentTimeMillis()
-      
-      let diff = currentTimeStamp - lastSyncedTimestamp
-      
-      return diff > 1800000 // fetch once in 30 min
-      
-    }
-    return true
   }
 }

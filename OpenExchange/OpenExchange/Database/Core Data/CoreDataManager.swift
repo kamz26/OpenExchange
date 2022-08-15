@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import UIKit
 
-class CoreDataManager: DatabaseMangerProtocol{
+class CoreDataManager: DatabaseMangerProtocol,SyncManagerProtocol{
   typealias T = NSManagedObjectContext
   
   typealias V = NSManagedObject
@@ -57,7 +57,34 @@ class CoreDataManager: DatabaseMangerProtocol{
     }
     return nil
   }
+  
   func deleteData() {
-
+    
+    guard getData()?.first != nil else {return}
+    
+    let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CurrencyRate")
+    let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+    do
+    {
+        try getDataManager.execute(deleteRequest)
+        try getDataManager.save()
+    }
+    catch
+    {
+        print ("There was an error")
+    }
+  }
+  
+  func isSyncRequired() -> Bool {
+    if let currentData = self.getData()?.first as? CurrencyRate {
+      let lastSyncedTimestamp = currentData.timestamp
+      let currentTimeStamp = Date().currentTimeMillis()
+      
+      let diff = currentTimeStamp - lastSyncedTimestamp
+      
+      return diff > 1800000 // fetch once in 30 min
+      
+    }
+    return true
   }
 }

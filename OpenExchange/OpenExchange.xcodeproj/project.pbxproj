@@ -88,7 +88,6 @@
 			children = (
 				C5C75AC428A680F8000BBA16 /* CurrencyListViewModelProtocol.swift */,
 				C5C75AB228A3E3CC000BBA16 /* CurrencyListViewModel.swift */,
-				C59A134E28A6D16600CC1FC9 /* SyncManagerProtocol.swift */,
 			);
 			path = CurrencyViewModel;
 			sourceTree = "<group>";
@@ -239,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				C59A135028A6E93A00CC1FC9 /* DatabaseMangerProtocol.swift */,
+				C59A134E28A6D16600CC1FC9 /* SyncManagerProtocol.swift */,
 				C5C75AEB28A6AF15000BBA16 /* Core Data */,
 			);
 			path = Database;
